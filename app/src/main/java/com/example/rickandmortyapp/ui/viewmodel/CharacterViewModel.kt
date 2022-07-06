@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyapp.data.remote.NetworkResult
 import com.example.rickandmortyapp.repository.Character
+import com.example.rickandmortyapp.repository.CharacterRepository
 import com.example.rickandmortyapp.repository.CharacterRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,14 +16,14 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CharacterViewModel @Inject constructor(private val characterRepository: CharacterRepositoryImpl): ViewModel() {
+class CharacterViewModel @Inject constructor(private val repository: CharacterRepository): ViewModel() {
 
     private val _characterViewState = MutableLiveData<CharacterViewStates>()
     val characterViewState: LiveData<CharacterViewStates> get() = _characterViewState
 
     fun getCharacters() {
         viewModelScope.launch {
-            when (val result = characterRepository.getCharacters()) {
+            when (val result = repository.getCharacters()) {
                 is NetworkResult.Success -> {
                     _characterViewState.postValue(CharacterViewStates.Success(result.data))
                 }

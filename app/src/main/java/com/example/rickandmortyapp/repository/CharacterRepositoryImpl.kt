@@ -24,7 +24,8 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacters(): NetworkResult<List<Character>> = withContext(Dispatchers.IO) {
         try {
-            //return@withContext (NetworkResult.Loading)
+            //return@withContext (NetworkResult.Loading) MEJORAR CON FLOW
+            //data store
             if (characterDao.getAllCharacters().isNullOrEmpty()) {
                 val remoteCharacter = apiService.getCharacter()
                 Log.d(TAG, "Hello. API Call with ${remoteCharacter.code()} @ URL ${remoteCharacter.raw().request.url} ")

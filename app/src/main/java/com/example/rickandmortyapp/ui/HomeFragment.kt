@@ -7,12 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.rickandmortyapp.App
+import com.example.rickandmortyapp.data.local.entities.CharacterDao
 import com.example.rickandmortyapp.databinding.FragmentHomeBinding
+import com.example.rickandmortyapp.repository.CharacterRepository
+import com.example.rickandmortyapp.repository.CharacterRepositoryImpl
 import com.example.rickandmortyapp.ui.viewmodel.CharacterViewModel
 import com.example.rickandmortyapp.ui.viewmodel.CharacterViewStates
+import com.example.rickandmortyapp.ui.viewmodel.ViewModelInjector
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -20,7 +29,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val characterViewModel: CharacterViewModel by activityViewModels()
+    private val characterViewModel: CharacterViewModel by viewModels{ ViewModelInjector.provideViewModelFactory((requireContext().applicationContext as App).characterRepository) }
     private lateinit var characterAdapter: CharacterAdapter
 
     override fun onCreateView(
@@ -33,7 +42,7 @@ class HomeFragment : Fragment() {
         characterViewModel.getCharacters()
         setUpRecyclerView()
 
-        characterViewModel.characterViewState.observe(viewLifecycleOwner, {
+        characterViewModel.characterViewState.observe(viewLifecycleOwner) {
             when (it) {
                 is CharacterViewStates.Success -> {
                     displayProgressBar(false)
@@ -48,7 +57,7 @@ class HomeFragment : Fragment() {
                     displayProgressBar(true)
                 }
             }
-        })
+        }
 
         return binding.root
     }
