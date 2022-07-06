@@ -29,7 +29,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val characterViewModel: CharacterViewModel by viewModels{ ViewModelInjector.provideViewModelFactory((requireContext().applicationContext as App).characterRepository) }
+    private val characterViewModel2: CharacterViewModel by viewModels{ ViewModelInjector.provideViewModelFactory((requireContext().applicationContext as App).characterRepository) }
+    private val characterViewModel: CharacterViewModel by activityViewModels()
     private lateinit var characterAdapter: CharacterAdapter
 
     override fun onCreateView(
